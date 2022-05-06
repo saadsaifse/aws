@@ -32,4 +32,29 @@
   * Condition is when the policy is in effect
 
 
+### AWS Access
+
+* Management Console (protected by password + MFA)
+* AWS CLI (protected by access keys)
+* AWS SDK (protected by access keys)
+* Access keys are generated through AWS console
+* Users manage their own access keys
+* Access keys are secret, just like a password. Don't share them
+
+
+### AWS CLI
+* Tool to interact with AWS CLI
+* Direct public API access of AWS services
+* Can create scripts to automate the tasks
+* It's open-source
+
+### AWS SDK
+
+* Language specific APIs
+* Embedded within your application
+* Also has Mobile and IoT SDKs
+* AWS CLI is built on AWS SDK for Python, named Boto
+* Install and use `aws configure` command to set up the cli with access key
+* Try `aws iam list-user` command
+
  
