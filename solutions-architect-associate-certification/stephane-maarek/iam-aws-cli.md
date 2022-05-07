@@ -57,4 +57,42 @@
 * Install and use `aws configure` command to set up the cli with access key
 * Try `aws iam list-user` command
 
- 
+ ### AWS CloudShell
+
+* Terminal in the AWS cloud console
+* Only available in certain regions
+* The region and the credentials used are the ones that the user is currently logged in with
+* We can also download/upload files
+* Can create multiple tabs
+
+### IAM Roles for AWS Services
+
+* Some AWS services need to perform actions on user's behalf
+* Assign permissions to AWS services rather than to the physical users with IAM Roles
+* E.g., EC2 instance will need an IAM Role to perform operations on AWS
+* Common roles:
+  * EC2 Instance Roles
+  * Lambda Function Roles
+  * Roles for CloudFormation
+  
+### IAM Security Tools
+
+* IAM Credentials Report (account-level)
+  * all account users and status of their credentials
+* IAM Access Advisor (user-level)
+  * Access advisor shows the service permissions granted to a user and when those service were last accessed
+    * Service activity is reported for the past 400 days
+    * Recent service activity appears within 4 hours
+  
+
+  #### IAM Best Practices
+
+  * Don't use the root account except for AWS account setup
+  * One physical user = one AWS user
+  * Assign users to groups and assign permissions to groups
+  * Strong password policy
+  * Use MFA
+  * Use Roles for giving permissions to AWS services
+  * Use Access Keys for programmatic access (CLI/SDK)
+  * Audit permissions of the account with the IAM credentials report
+  * Never share IAM users and access keys
