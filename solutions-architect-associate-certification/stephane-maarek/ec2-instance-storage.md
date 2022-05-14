@@ -99,4 +99,66 @@
 
 ### EBS Encryption
 
+* How to encrypt an EBS volume?
+* When you encrypt
+  * Data at rest is encrypted inside the volume
+  * All in-flight data between the instance and the volume is encrypted
+  * All snapshots are encrypted
+  * All volumes created from the snapshot are encrypted
+* Encryption and decryption is handled transparently
+* Encryption has a minimal impact on latency
+* Leverages keys from KMS (AES-256)
+* Copying an un-encrypted snapshot allows encryption
+* Snapshots of encrypted volumes are encrypted
 
+#### How to encrypt and unencrypted EBS volume
+
+* Create an EBS snapshot of the volume
+* Encrypt the EBS snapshot (using copy)
+* Create new EBS volume from the snapshot (the volume will also be encrypted)
+* Attach the encrypted volume to the original instance
+
+### Amazon EFS - Elastic File System
+
+* Managed NFS (network file system) that can be mounted on many EC2 instances
+* The instances can be in multi-AZ (that's the whole power of EFS)
+* HA, scalable, expensive (3xgp2), pay per use
+* Use security group to control access to EFS
+* Uses NFSv4.1 protocol
+* Compatible with Linux based AMI (not windows)
+* Can set encryption at rest using KMS
+* POSIX file system that has a standard file API
+* Scales automatically, pay per use
+
+#### EFS Performance & Storage Classes
+
+* EFS Scale 
+  * 1000s of NFS clients, 10 GB+ /s of throughput
+  * Grow to Petabyte-scale network file system, automatically
+* Performance mode (set at EFS creation time)
+  * General purpose (default)
+  * Latency-sensitive use cases (web server, CMS, etc)
+  * Max IO - higher latency, throughput, highly parallel (big data, media processing)
+* Throughput mode
+  * Bursting (1 TB = 50 MiB/s + burst of up to 100 MiB/s)
+  * Provisioned: set your throughput regardless of storage size, e.g., 1GiB/s for 1TB storage
+* EFS Storage Classes
+  * Storage Tiers
+    * Lifecycle management feature to move files after N days)
+    * EFS-IA (Infrequent Access)
+    * Works with a EFS-IA lifecycle policy
+  * Availability and durability
+    * Regional: multi-AZ, great for prod
+    * One zone: One AZ, great for dev, backup enabled by default, compatible with IA (EFS One Zone-IA)
+    * Over 90% in cost savings
+
+
+### EBS vs. EFS
+*   EBS can be attached to only one instance at a time
+*   are locked at the AZ level
+*   Root ebs volumes get terminated with the instance (can be disabled)
+*   EFS can mount 100s of instances across AZ
+*   EFS share website files
+*   Only for linux instances
+*   EFS is more expensive
+    *   but can use EFS-IA for cost savings
