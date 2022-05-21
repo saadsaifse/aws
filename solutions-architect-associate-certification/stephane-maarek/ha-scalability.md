@@ -70,3 +70,91 @@
 * Port and proto can also be found in x-forwarded-port and x-forwarded-proto respectively
 
 
+### Network Load Balancer
+
+* Work at the network layer 4 (low-level)
+* Forward TCP/UDP traffic to instances
+* Handle millions of request per seconds
+* Less latency ~100ms (vs 400ms for ALB)
+* NLB has a static IP per AZ, and supports assigning Elastic IP
+* Not included in the free tier
+
+### Gateway Load Balancer
+
+* Deploy, scale, and manage a fleet of 3rd party network virtual appliances in AWS
+* E.g., firewalls, intrusion detection, packet inspection, etc.
+* Operates at the lower level (layer 3) -- IP packets
+* Combines the following:
+  * Transparent network gateway -- single entry/exit for all traffic
+  * Load balancer -- distributes traffic to virtual instances
+* Uses the GENEVE protocol on port 6081
+
+### Cross-Zone Load Balancing
+
+* Balancing the load equally between the instances in all AZ
+* Application load balancer
+  * Always on  (can't be disabled)
+  * No charges for inter AZ data
+* Network load balancer
+  * Disabled by default
+  * You pay chargers for inter AZ data if enabled
+* Classic load balancer
+  * Disabled by default
+  * No charger for inter AZ data, if enabled 
+
+### SSL in Elastic Load Balancer
+* SSL and TLS (newer)
+* Uses X.509 certificate
+* Can manage using ACM (AWS Certificate Manager)
+* Can also upload your own certificate
+* Must specify a default certificate
+* Clients can use SNI (Server Name Indication)
+
+#### SNI (Server Name Indication)
+* How do you load multiple SSL certificates on a single webserver to be able to host multiple websites
+* Requires the client to indicate the hostname of the target server in the initial SSL handshake
+* The server finds the correct certificate or return the default one
+* Only for ALB, NLB, CloudFront
+* Does not work with CLB
+
+
+### Connection Draining/Deregistration delay
+
+* The time to complete "in-flight requests" while the instance is de-registering or unhealthy
+* The instance will finish the existing requests in the draining time
+* Load balancer will send new requests to the new EC2 instances
+* The delay is usually 1 to 3600 seconds (default: 300 seconds)
+* Can be disabled (set value to 0)
+* Set a low value if requests are short
+
+### Auto Scaling Group (ASG)
+
+*  Scale out or scale in automatically based on some configuration
+* Ensures a min/max number of EC2 instances are running
+* Automatically register new instances to a load balancer
+* ASG and load balancers work hang in hand
+* Launch configuration
+  * AMI + instance type
+  * EC2 user data
+  * EBS volume
+  * Security groups
+  * SSH key pair
+  * Min/max size, initial capacity
+  * Network + subnet information
+  * Load balancer information
+  * Scaling policies
+* Auto Scaling Alarms
+  * Based on CloudWatch metrics
+  * Alarm trigger scale out or scale in alarms
+* Auto Scaling Rules
+  * Target avg CPU usage
+  * Number of requests on the ELB per instance
+  * Average network in/out
+  * Custom metrics
+    * No. of connected users
+    * Send custom metric from application on EC2 to CloudWatch using PutMetric API
+    * Create CloudWatch alarm to react to low/high values
+    * Use the alarm to trigger the scaling policy for ASG
+* IAM roles attached to an ASG will get assigned to EC2 instances
+* ASG are free. You pay for the underlying resources being launched
+* ASG will also auto-create new instances if any instance gets terminated
