@@ -158,3 +158,28 @@
 * IAM roles attached to an ASG will get assigned to EC2 instances
 * ASG are free. You pay for the underlying resources being launched
 * ASG will also auto-create new instances if any instance gets terminated
+
+#### ASG Scaling Policies
+
+* Dynamic Scaling Policies
+  * based on the CPU utilization of the instances e.g., >70% of processor usage etc.
+  * based on request count per target
+  * based on a schedule
+* Predictive Scaling
+  * Forecast the load and schedule ahead
+* Scaling Cooldowns
+  * After any scaling activity, a cooldown period starts (default 300 seconds)
+  * During cooldown, ASG will not launch or terminate additional instances (to allow metrics to stabilize)
+
+### ASG - For Solutions Architect
+
+* Find AZ that has most number of instances
+* Terminate the ones that has the oldest launch configuration
+* Lifecycle hooks
+  * Ability to perform extra steps before the instance goes in service (Pending state)
+  * Same before an instance is terminated
+* Launch template vs. Launch Configuration
+  * Both define AMI, instance type, Security groups, etc.
+  * Launch configuration is legacy that must be created every time
+  * Launch templates are newer and can have multiple versions. Has more features too
+
